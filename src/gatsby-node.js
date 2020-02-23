@@ -33,14 +33,17 @@ const DEFAULTMAPPING = {
 }
 let siteUrl
 
-const copyStylesheet = async ({ siteUrl, pathPrefix, indexOutput }) => {
+const copyStylesheet = async ({ siteUrl, pathPrefix, indexOutput, hideAttribution }) => {
     const siteRegex = /(\{\{blog-url\}\})/g
 
     // Get our stylesheet template
     const data = await fs.readFile(XSLFILE)
 
     // Replace the `{{blog-url}}` variable with our real site URL
-    const sitemapStylesheet = data.toString().replace(siteRegex, url.resolve(siteUrl, path.join(pathPrefix, indexOutput)))
+    let sitemapStylesheet = data.toString().replace(siteRegex, url.resolve(siteUrl, path.join(pathPrefix, indexOutput)))
+    if (hideAttribution) {
+      sitemapStylesheet = sitemapStylesheet.replace(/<p.*?Ghost.*?\/p>/s, '')
+    }
 
     // Save the updated stylesheet to the public folder, so it will be
     // available for the xml sitemap files
@@ -90,8 +93,9 @@ const getNodePath = (node, allSitePage) => {
 
 // Add all other URLs that Gatsby generated, using siteAllPage,
 // but we didn't fetch with our queries
-const addPageNodes = (parsedNodesArray, allSiteNodes, siteUrl) => {
+const addPageNodes = (parsedNodesArray, allSiteNodes, siteUrl, pluginOptions) => {
     const [parsedNodes] = parsedNodesArray
+    const { stripTrailingSlash } = pluginOptions
     const pageNodes = []
     const addedPageNodes = { pages: [] }
 
@@ -110,6 +114,9 @@ const addPageNodes = (parsedNodesArray, allSiteNodes, siteUrl) => {
     const remainingNodes = _.difference(allSiteNodes, usedNodes)
 
     remainingNodes.forEach(({ node }) => {
+        if (stripTrailingSlash && node.url.length > 1) {
+          node.url = node.url.replace(/\/$/, '')
+        }
         addedPageNodes.pages.push({
             url: url.resolve(siteUrl, node.url),
             node: node,
@@ -155,9 +162,17 @@ const serializeSources = ({ mapping, additionalSitemaps = [] }) => {
     return sitemaps
 }
 
-const runQuery = (handler, { query, exclude }) => handler(query).then((r) => {
+const runQuery = (handler, { query, exclude, resultKey }) => handler(query).then((r) => {
     if (r.errors) {
         throw new Error(r.errors.join(`, `))
+    }
+
+    // options.resultKey - navigate extra key in result data, reshape.
+    if(resultKey && resultKey in r.data) {
+      for (let source in r.data[resultKey]) {
+        r.data[source] = r.data[resultKey][source]
+      }
+      delete r.data[resultKey]
     }
 
     for (let source in r.data) {
@@ -191,9 +206,10 @@ const runQuery = (handler, { query, exclude }) => handler(query).then((r) => {
     return r.data
 })
 
-const serialize = ({ ...sources } = {},{ site, allSitePage }, mapping) => {
+const serialize = ({ ...sources } = {},{ site, allSitePage }, pluginOptions) => {
     const nodes = []
     const sourceObject = {}
+    const { mapping } = pluginOptions
 
     siteUrl = site.siteMetadata.siteUrl
 
@@ -234,7 +250,7 @@ const serialize = ({ ...sources } = {},{ site, allSitePage }, mapping) => {
     }
     nodes.push(sourceObject)
 
-    const pageNodes = addPageNodes(nodes, allSitePage.edges, siteUrl)
+    const pageNodes = addPageNodes(nodes, allSitePage.edges, siteUrl, pluginOptions)
 
     const allNodes = _.merge(nodes, pageNodes)
 
@@ -274,7 +290,7 @@ exports.onPostBuild = async ({ graphql, pathPrefix }, pluginOptions) => {
     // Instanciate the Ghost Sitemaps Manager
     const manager = new Manager(options)
 
-    await serialize(queryRecords, defaultQueryRecords, options.mapping).forEach((source) => {
+    await serialize(queryRecords, defaultQueryRecords, options).forEach((source) => {
         for (let type in source) {
             source[type].forEach((node) => {
                 // "feed" the sitemaps manager with our serialized records
