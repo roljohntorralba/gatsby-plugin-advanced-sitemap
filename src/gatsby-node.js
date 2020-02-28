@@ -202,7 +202,7 @@ const runQuery = (handler, { query, exclude, resultKey }) => handler(query).then
     return r.data
 })
 
-const serialize = ({ ...sources } = {},{ site, allSitePage }, { mapping }) => {
+const serialize = ({ ...sources } = {},{ site, allSitePage }, mapping) => {
     const nodes = []
     const sourceObject = {}
 
@@ -215,7 +215,6 @@ const serialize = ({ ...sources } = {},{ site, allSitePage }, { mapping }) => {
             if (currentSource) {
                 sourceObject[mapping[type].sitemap] = sourceObject[mapping[type].sitemap] || []
                 currentSource.edges.map(({ node }) => {
-                    let nodeUrl
                     if (!node) {
                         return
                     }
@@ -286,7 +285,7 @@ exports.onPostBuild = async ({ graphql, pathPrefix }, pluginOptions) => {
     // Instanciate the Ghost Sitemaps Manager
     const manager = new Manager(options)
 
-    await serialize(queryRecords, defaultQueryRecords, options).forEach((source) => {
+    await serialize(queryRecords, defaultQueryRecords, options.mapping).forEach((source) => {
         for (let type in source) {
             source[type].forEach((node) => {
                 // "feed" the sitemaps manager with our serialized records
