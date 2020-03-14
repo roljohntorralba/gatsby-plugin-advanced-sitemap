@@ -1,4 +1,17 @@
-# gatsby-plugin-advanced-sitemap
+# gatsby-plugin-advanced-sitemap-mod
+
+This is a (hopefully) temporary fork of
+[gatsby-plugin-advanced-sitemap](https://github.com/TryGhost/gatsby-plugin-advanced-sitemap), with a few new options added:
+
+* `resultKey` string = optional: access for query data not at root, but
+    instead under a container key (i.e. 'postgres').
+* `hideAttribution` boolean = optional: hide "Ghost" attribution line from
+    XSL stylesheet.
+
+There is an [open pull request](https://github.com/TryGhost/gatsby-plugin-advanced-sitemap/pull/18) to merge these changes into mainline. If/when
+that happens, this package will be deprecated.
+
+---
 
 The default Gatsby sitemap plugin generates a simple blob of raw XML for all your pages. This **advanced sitemap plugin** adds more power and configuration, generating a single or multiple sitemaps with full XSL templates to make them neatly organised and human + machine readable, as well linking image resources to encourage media indexing.
 

@@ -1,19 +1,19 @@
 {
-  "name": "gatsby-plugin-advanced-sitemap",
-  "description": "Advanced plugin for generating configurable XML sitemaps with linked media for better SEO and human-readable XSL templates.",
+  "name": "gatsby-plugin-advanced-sitemap-mod",
+  "description": "Temporary fork, see README - Advanced plugin for generating configurable XML sitemaps with linked media for better SEO and human-readable XSL templates.",
   "version": "1.5.2",
   "license": "MIT",
-  "author": "Ghost Foundation",
-  "homepage": "https://docs.ghost.org/api/gatsby/",
+  "author": "Brev Patterson",
+  "homepage": "https://github.com/brev/gatsby-plugin-advanced-sitemap",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tryghost/gatsby-plugin-advanced-sitemap.git"
+    "url": "https://github.com/brev/gatsby-plugin-advanced-sitemap"
   },
   "engines": {
     "node": ">= 8.9.0"
   },
   "bugs": {
-    "url": "https://github.com/tryghost/gatsby-plugin-advanced-sitemap/issues"
+    "url": "https://github.com/brev/gatsby-plugin-advanced-sitemap/issues"
   },
   "main": "index.js",
   "keywords": [
