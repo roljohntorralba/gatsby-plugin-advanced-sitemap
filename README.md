@@ -119,7 +119,6 @@ plugins: [
             addUncaughtPages: true, // optional: will fill up pages that are not caught by queries and mapping and list them under `sitemap-pages.xml`
             hideAttribution: false, // optional: hide "Ghost" attribution line from XSL stylesheet
             resultKey: null, // optional: access for query data not at root, but instead under a container key (i.e. 'postgres')
-            stripTrailingSlash: false, // optional: make sure to strip trailing slashes from uncaught siteAllPage urls
             additionalSitemaps: [ // optional: add additional sitemaps, which are e. g. generated somewhere else, but need to be indexed for this domain
                 {
                     name: `my-other-posts`,

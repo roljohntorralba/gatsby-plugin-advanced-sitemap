@@ -93,9 +93,8 @@ const getNodePath = (node, allSitePage) => {
 
 // Add all other URLs that Gatsby generated, using siteAllPage,
 // but we didn't fetch with our queries
-const addPageNodes = (parsedNodesArray, allSiteNodes, siteUrl, pluginOptions) => {
+const addPageNodes = (parsedNodesArray, allSiteNodes, siteUrl) => {
     const [parsedNodes] = parsedNodesArray
-    const { stripTrailingSlash } = pluginOptions
     const pageNodes = []
     const addedPageNodes = { pages: [] }
 
@@ -114,9 +113,6 @@ const addPageNodes = (parsedNodesArray, allSiteNodes, siteUrl, pluginOptions) =>
     const remainingNodes = _.difference(allSiteNodes, usedNodes)
 
     remainingNodes.forEach(({ node }) => {
-        if (stripTrailingSlash && node.url.length > 1) {
-          node.url = node.url.replace(/\/$/, '')
-        }
         addedPageNodes.pages.push({
             url: url.resolve(siteUrl, node.url),
             node: node,
@@ -206,10 +202,9 @@ const runQuery = (handler, { query, exclude, resultKey }) => handler(query).then
     return r.data
 })
 
-const serialize = ({ ...sources } = {},{ site, allSitePage }, pluginOptions) => {
+const serialize = ({ ...sources } = {},{ site, allSitePage }, mapping) => {
     const nodes = []
     const sourceObject = {}
-    const { mapping } = pluginOptions
 
     siteUrl = site.siteMetadata.siteUrl
 
@@ -250,7 +245,7 @@ const serialize = ({ ...sources } = {},{ site, allSitePage }, pluginOptions) => 
     }
     nodes.push(sourceObject)
 
-    const pageNodes = addPageNodes(nodes, allSitePage.edges, siteUrl, pluginOptions)
+    const pageNodes = addPageNodes(nodes, allSitePage.edges, siteUrl)
 
     const allNodes = _.merge(nodes, pageNodes)
 
@@ -290,7 +285,7 @@ exports.onPostBuild = async ({ graphql, pathPrefix }, pluginOptions) => {
     // Instanciate the Ghost Sitemaps Manager
     const manager = new Manager(options)
 
-    await serialize(queryRecords, defaultQueryRecords, options).forEach((source) => {
+    await serialize(queryRecords, defaultQueryRecords, options.mapping).forEach((source) => {
         for (let type in source) {
             source[type].forEach((node) => {
                 // "feed" the sitemaps manager with our serialized records
