@@ -1,7 +1,7 @@
 {
   "name": "gatsby-plugin-advanced-sitemap-mod",
   "description": "Temporary fork, see README - Advanced plugin for generating configurable XML sitemaps with linked media for better SEO and human-readable XSL templates.",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "license": "MIT",
   "author": "Brev Patterson",
   "homepage": "https://github.com/brev/gatsby-plugin-advanced-sitemap",
