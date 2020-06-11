@@ -1,15 +1,15 @@
 # gatsby-plugin-advanced-sitemap-mod
 
-This is a (hopefully) temporary fork of
-[gatsby-plugin-advanced-sitemap](https://github.com/TryGhost/gatsby-plugin-advanced-sitemap), with a few new options added:
+This is a fork of
+[gatsby-plugin-advanced-sitemap](https://github.com/TryGhost/gatsby-plugin-advanced-sitemap), 
+with a few new options added:
 
-* `resultKey` string = optional: access for query data not at root, but
-    instead under a container key (i.e. 'postgres').
 * `hideAttribution` boolean = optional: hide "Ghost" attribution line from
-    XSL stylesheet.
-
-There is an [open pull request](https://github.com/TryGhost/gatsby-plugin-advanced-sitemap/pull/18) to merge these changes into mainline. If/when
-that happens, this package will be deprecated.
+      XSL stylesheet.
+* `localImageHostname` string = optional: Hostname prefix to add to image URLs 
+      that don't contain leading hostnames (e.g. missing "http://hostname.com").
+* `resultKey` string = optional: access for query data not at root, but
+      instead under a container key (i.e. 'postgres').
 
 ---
 
@@ -131,6 +131,7 @@ plugins: [
             createLinkInHead: true, // optional: create a link in the `<head>` of your site
             addUncaughtPages: true, // optional: will fill up pages that are not caught by queries and mapping and list them under `sitemap-pages.xml`
             hideAttribution: false, // optional: hide "Ghost" attribution line from XSL stylesheet
+            localImageHostname: null, // optional: Hostname prefix to add to local internal image urls
             resultKey: null, // optional: access for query data not at root, but instead under a container key (i.e. 'postgres')
             additionalSitemaps: [ // optional: add additional sitemaps, which are e. g. generated somewhere else, but need to be indexed for this domain
                 {

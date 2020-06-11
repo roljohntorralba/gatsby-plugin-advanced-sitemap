@@ -260,6 +260,7 @@ exports.onPostBuild = async ({ graphql, pathPrefix }, pluginOptions) => {
     const options = pluginOptions.addUncaughtPages ? _.merge(defaultOptions, pluginOptions) : Object.assign(defaultOptions, pluginOptions)
     const indexSitemapFile = path.join(PUBLICPATH, pathPrefix, INDEXFILE)
     const resourcesSitemapFile = path.join(PUBLICPATH, pathPrefix, RESOURCESFILE)
+    const imageFields = ['cover_image', 'profile_image', 'feature_image']
 
     delete options.plugins
     delete options.createLinkInHead
@@ -288,6 +289,17 @@ exports.onPostBuild = async ({ graphql, pathPrefix }, pluginOptions) => {
     await serialize(queryRecords, defaultQueryRecords, options.mapping).forEach((source) => {
         for (let type in source) {
             source[type].forEach((node) => {
+                // add prefix hostname to local image paths
+                imageFields.forEach((image) => {
+                    if (
+                        'localImageHostname' in options &&
+                        image in node.node &&
+                        !/^http/.test(node.node[image])
+                    ) {
+                        node.node[image] = options.localImageHostname + node.node[image]
+                    }
+                })
+
                 // "feed" the sitemaps manager with our serialized records
                 manager.addUrls(type, node)
             })
