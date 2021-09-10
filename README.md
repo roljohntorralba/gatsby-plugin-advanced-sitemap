@@ -29,7 +29,7 @@ _NOTE: This plugin only generates output in `production` mode! To test, run: `ga
 
 ## Install
 
-`npm install --save gatsby-plugin-advanced-sitemap`
+`npm install --save gatsby-plugin-advanced-sitemap-mod`
 
 ## How to Use
 
@@ -42,7 +42,7 @@ siteMetadata: {
     siteUrl: `https://www.example.com`,
 },
 plugins: [
-    `gatsby-plugin-advanced-sitemap`
+    `gatsby-plugin-advanced-sitemap-mod`
 ]
 ```
 
@@ -59,7 +59,7 @@ If you want to generate advanced, individually organised sitemaps based on your 
 
 plugins: [
     {
-        resolve: `gatsby-plugin-advanced-sitemap`,
+        resolve: `gatsby-plugin-advanced-sitemap-mod`,
         options: {
              // 1 query for each data type
             query: `
